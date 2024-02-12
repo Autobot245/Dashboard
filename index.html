@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.2.0/firebase-app.js';
+    import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/9.2.0/firebase-database.js';
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+            apiKey: "AIzaSyD29Tm2OFyavH1mjvg9IA940ebMN3eJ8ls",
+            authDomain: "autobot-a4a4b.firebaseapp.com",
+            databaseURL: "https://autobot-a4a4b-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "autobot-a4a4b",
+            storageBucket: "autobot-a4a4b.appspot.com",
+            messagingSenderId: "102114231838",
+            appId: "1:102114231838:web:3c5516c3bef3d17cf0100f"
+        };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Initialize charts
+    const gyroXChartCtx = document.getElementById('gyroXChart').getContext('2d');
+    const gyroYChartCtx = document.getElementById('gyroYChart').getContext('2d');
+    const gyroZChartCtx = document.getElementById('gyroZChart').getContext('2d');
+    const distanceChartCtx = document.getElementById('distanceChart').getContext('2d');
+    const temperatureChartCtx = document.getElementById('temperatureChart').getContext('2d');
+
+    const gyroXChart = new Chart(gyroXChartCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Gyro X',
+          data: [],
+          fill: false,
+          borderColor: '#4CAF50',
+          borderWidth: 2,
+          pointBackgroundColor: '#4CAF50',
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: {
+              color: '#888'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#888'
+            }
+          }
+        }
+      }
+    });
+
+    const gyroYChart = new Chart(gyroYChartCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Gyro Y',
+          data: [],
+          fill: false,
+          borderColor: '#2196F3',
+          borderWidth: 2,
+          pointBackgroundColor: '#2196F3',
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: {
+              color: '#888'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#888'
+            }
+          }
+        }
+      }
+    });
+
+    const gyroZChart = new Chart(gyroZChartCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Gyro Z',
+          data: [],
+          fill: false,
+          borderColor: '#FF5722',
+          borderWidth: 2,
+          pointBackgroundColor: '#FF5722',
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: {
+              color: '#888'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#888'
+            }
+          }
+        }
+      }
+    });
+
+    const distanceChart = new Chart(distanceChartCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Distance',
+          data: [],
+          fill: false,
+          borderColor: '#FFC107',
+          borderWidth: 2,
+          pointBackgroundColor: '#FFC107',
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: {
+              color: '#888'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#888'
+            }
+          }
+        }
+      }
+    });
+
+    const temperatureChart = new Chart(temperatureChartCtx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Temperature',
+          data: [],
+          fill: false,
+          borderColor: '#FF9800',
+          borderWidth: 2,
+          pointBackgroundColor: '#FF9800',
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            ticks: {
+              color: '#888'
+            }
+          },
+          y: {
+            ticks: {
+              color: '#888'
+            }
+          }
+        }
+      }
+    });
+
+    // Function to fetch data from Firebase and update charts
+    function fetchDataAndRenderCharts() {
+      const gyroXRef = ref(database, 'Sensor/gyroX');
+      const gyroYRef = ref(database, 'Sensor/gyroY');
+      const gyroZRef = ref(database, 'Sensor/gyroZ');
+      const distanceRef = ref(database, 'Sensor/distance');
+      const temperatureRef = ref(database, 'Sensor/temperature');
+
+      onValue(gyroXRef, (snapshot) => {
+        const data = snapshot.val();
+        const time = new Date().toLocaleTimeString();
+        gyroXChart.data.labels.push(time);
+        gyroXChart.data.datasets[0].data.push(data);
+        gyroXChart.update();
+      });
+
+      onValue(gyroYRef, (snapshot) => {
+        const data = snapshot.val();
+        const time = new Date().toLocaleTimeString();
+        gyroYChart.data.labels.push(time);
+        gyroYChart.data.datasets[0].data.push(data);
+        gyroYChart.update();
+      });
+
+      onValue(gyroZRef, (snapshot) => {
+        const data = snapshot.val();
+        const time = new Date().toLocaleTimeString();
+        gyroZChart.data.labels.push(time);
+        gyroZChart.data.datasets[0].data.push(data);
+        gyroZChart.update();
+      });
+
+      onValue(distanceRef, (snapshot) => {
+        const data = snapshot.val();
+        const time = new Date().toLocaleTimeString();
+        distanceChart.data.labels.push(time);
+        distanceChart.data.datasets[0].data.push(data);
+        distanceChart.update();
+      });
+
+      onValue(temperatureRef, (snapshot) => {
+        const data = snapshot.val();
+        const time = new Date().toLocaleTimeString();
+        temperatureChart.data.labels.push(time);
+        temperatureChart.data.datasets[0].data.push(data);
+        temperatureChart.update();
+      });
+    }
+
+    // Call the function to initially render charts
+    fetchDataAndRenderCharts();
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: black; /* Steel Grey */
+      color: #ffffff; /* White */
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding-top: 20px;
+    }
+
+    .graph-container {
+      width: calc(50% - 40px);
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      transition: transform 0.3s ease; /* Added transition */
+    }
+
+    .graph-container:hover {
+      transform: scale(1.03); /* Added scale transform */
+    }
+
+    canvas {
+      width: 100%;
+      height: 300px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .graph-container {
+        width: calc(100% - 40px);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .graph-container {
+        width: calc(50% - 40px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Vehicle Dashboard</h1>
+  <div class="container">
+    <div class="graph-container">
+      <canvas id="gyroXChart"></canvas>
+    </div>
+    <div class="graph-container">
+      <canvas id="gyroYChart"></canvas>
+    </div>
+    <div class="graph-container">
+      <canvas id="gyroZChart"></canvas>
+    </div>
+    <div class="graph-container">
+      <canvas id="distanceChart"></canvas>
+    </div>
+    <div class="graph-container">
+      <canvas id="temperatureChart"></canvas>
+    </div>
+  </div>
+</body>
+</html>
