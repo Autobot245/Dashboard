@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -248,18 +249,88 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: black; /* Steel Grey */
+      background-color: #4f84c4; /* Steel Grey */
       color: #ffffff; /* White */
     }
 
     .container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Adjusted alignment to start from left */
+    padding-top: 20px;
+    padding-left: 220px; /* Added padding to the left to accommodate the side panel */
     }
 
     .graph-container {
+    width: calc(45% - 40px); /* Adjusted width to make them slightly smaller */
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+    transition: transform 0.3s ease; /* Added transition */
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding-left: 20px; /* Adjusted padding for smaller screens */
+        }
+
+        .graph-container {
+            width: calc(100% - 40px);
+        }
+        }
+
+
+    .site-panel {
+      background-color: #fff;
+      width: 200px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .site-panel-logo {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .site-panel-logo img {
+      max-width: 100%;
+    }
+
+    .site-panel-content {
+      padding: 20px;
+    }
+
+    .site-panel-content ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .site-panel-content ul li {
+      margin-bottom: 10px;
+    }
+
+    .site-panel-content ul li a {
+      color: #000;
+      text-decoration: underline;
+      font-weight: bold;
+
+    }
+
+    .header {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+
+    /* .graph-container {
       width: calc(50% - 40px);
       padding: 20px;
       box-sizing: border-box;
@@ -268,7 +339,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       margin: 20px;
       transition: transform 0.3s ease; /* Added transition */
-    }
+    } */
 
     .graph-container:hover {
       transform: scale(1.03); /* Added scale transform */
@@ -282,6 +353,8 @@
     h1 {
       text-align: center;
       margin-bottom: 20px;
+      padding-left: 12%;
+      /* text-decoration: underline; */
     }
 
     @media (max-width: 768px) {
@@ -297,8 +370,21 @@
     }
   </style>
 </head>
+
 <body>
-  <h1>Vehicle Dashboard</h1>
+  <div class="site-panel">
+    <div class="site-panel-logo">
+      <img src="logo.png" alt="Logo">
+    </div>
+    <div class="site-panel-content">
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="header">
+    <h1>Vehicle Dashboard</h1>
+  </div>
   <div class="container">
     <div class="graph-container">
       <canvas id="gyroXChart"></canvas>
@@ -317,4 +403,5 @@
     </div>
   </div>
 </body>
+
 </html>
